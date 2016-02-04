@@ -18,7 +18,6 @@ Vector Vector::operator-(Vector & other){
   Vector p(t);
   p.subtract(other);
   return p;
-  //p.subtract(other);
 }
 
 Vector Vector::operator+(Vector & other){
@@ -26,7 +25,6 @@ Vector Vector::operator+(Vector & other){
   Vector p(t);
   p.add(other);
   return p;
-  //return
 }
 void Vector::subtract(Vector & other){
   std::get<0>(m_position) -= std::get<0>(other.position());

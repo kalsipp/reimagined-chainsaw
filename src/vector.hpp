@@ -14,6 +14,7 @@ public:
   void add(Vector & other);
   Vector operator-(Vector & other);
   Vector operator+(Vector & other);
+ 
 private:
   std::tuple<int, int, int>  m_position;
 
