@@ -1,5 +1,5 @@
 #include "vector.hpp"
-
+#include <cassert>
 
 Vector::Vector(int x, int y, int z){
  m_position = std::make_tuple(x, y, z);
@@ -46,6 +46,33 @@ void Vector::add(Vector & other){
 
 
 void Vector::set_position(int x, int y, int z){
-    m_position = std::make_tuple(x, y, z);
+  m_position = std::make_tuple(x, y, z);
+}
+int Vector::magnitude(){
+  return std::get<0>(m_position)*std::get<0>(m_position)+std::get<1>(m_position)*std::get<1>(m_position) + std::get<2>(m_position)*std::get<2>(m_position);
 }
 
+void Vector::rotateXY(float degrees){
+  int magn = magnitude();
+  float radians = M_PI*degrees/180;
+  int old_x = std::get<0>(m_position);
+  int old_y = std::get<1>(m_position);
+  std::get<0>(m_position) = round(old_x*cos(radians)) - round(old_y*sin(radians));
+  std::get<1>(m_position) = round(old_x*sin(radians)) + round(old_y*cos(radians));
+
+}
+
+void Vector::rotateXZ(float degrees){
+  float radians = M_PI*degrees/180;
+  int old_x = std::get<0>(m_position);
+  int old_z = std::get<2>(m_position);
+  std::get<0>(m_position) = round(old_x*cos(radians)) + round(old_z*sin(radians));
+  std::get<2>(m_position) = -round(old_x*sin(radians)) + round(old_z*cos(radians));
+}
+void Vector::rotateYZ(float degrees){
+  float radians = M_PI*degrees/180;
+  int old_y = std::get<1>(m_position);
+  int old_z = std::get<2>(m_position);
+  std::get<1>(m_position) = round(old_y*cos(radians)) + round(old_z*sin(radians));
+  std::get<2>(m_position) = -round(old_y*sin(radians)) + round(old_z*cos(radians));
+}

@@ -15,6 +15,7 @@ public:
   std::tuple<int, int, int> & position();
   
   void set_position(int x = 0, int y = 0, int z = 0);
+  void set_position(Point & other);
   void set_pixel(Pixel & pixel);
   
   void subtract(Point & other);

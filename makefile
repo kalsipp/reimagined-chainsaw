@@ -1,7 +1,7 @@
 CC = g++
 #CC = clang
 FLAGS = -std=c++11 -Wall -pedantic
-INCLUDES = -lncurses -pthread -lgtest -lgtest_main
+INCLUDES = 
 CPP_FILES := $(wildcard src/*.cpp)
 OBJ_FILES := $(addprefix obj/,$(notdir $(CPP_FILES:.cpp=.o)))
 main.out: $(OBJ_FILES)

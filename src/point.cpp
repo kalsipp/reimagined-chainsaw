@@ -15,14 +15,16 @@ std::tuple<int, int, int> & Point::position(){
 }
 
 void Point::paint(Canvas & canvas){
-  //int x = 0;
-  //int y = 0;
-  //canvas.add_pixel(m_pixel, x, y);
-  std::cout << "(" << std::get<0>(m_position) << ", " << std::get<1>(m_position) << ", " << std::get<2>(m_position) << ")"<< std::endl;
+  int x = std::get<0>(m_position);
+  int y = std::get<1>(m_position);
+  canvas.add_pixel(m_pixel, x, y);
 }
 
 void Point::set_position(int x, int y, int z){
-    m_position = std::make_tuple(x, y, z);
+  m_position = std::make_tuple(x, y, z);
+}
+void Point::set_position(Point & other){
+  m_position = other.position();
 }
 
 void Point::set_pixel(Pixel & pixel){
@@ -51,6 +53,12 @@ void Point::subtract(Point & other){
 }
 
 void Point::add(Point & other){
+  std::get<0>(m_position) += std::get<0>(other.position());
+  std::get<1>(m_position) += std::get<1>(other.position());
+  std::get<2>(m_position) += std::get<2>(other.position());
+}
+
+void Point::add(Vector & other){
   std::get<0>(m_position) += std::get<0>(other.position());
   std::get<1>(m_position) += std::get<1>(other.position());
   std::get<2>(m_position) += std::get<2>(other.position());
