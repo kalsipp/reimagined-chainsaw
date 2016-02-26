@@ -15,8 +15,8 @@ void Game::mainloop(){
 	float time_amount = 100000;
 // do something
 	std::vector<Point> rectpoints;
-	Point start = {0, 0, 0};
-	Point end = {10, 0, 0};
+	Point start = {10, 0, 0};
+	Point end = {20, 5, 5};
 
 	Line l1(start, end);
 
@@ -37,11 +37,12 @@ void Game::mainloop(){
 
 
 	Rectangle rect(l1, l2, l3, l4);
+	rect.rotate(45, 0, 0);
 	//l1.rotate(10,0,0);
-	rect.get_points(rectpoints);
+	//rect.get_points(rectpoints);
 	//std::cout << float( clock () - begin_time ) /  CLOCKS_PER_SEC;
 	std::vector<Point> points;
-	for(int i = 0; i < 0; ++i){
+	for(int i = 0; i < 10000; ++i){
 		int x =0 + rand()% (c.get_screen_height());
 		int y = 0 + rand()% (c.get_screen_width()/2);
 		int z = rand()% 1;
@@ -57,11 +58,11 @@ void Game::mainloop(){
 		(*i).paint(c);
 	}
 	c.paint();
-	/*
+	
 	while(true){
 		if(clock() - begin_time > time_amount){
             //create the space's origin as a point
-			Point origin (30,30,0);
+			Point origin (15,15,0);
 			Vector tempVector;
 			for (int x = 0; x < points.size(); x++)
 			{
@@ -77,7 +78,8 @@ void Game::mainloop(){
 			}
 			l1.rotate(10, 10, 10, &origin);
 			std::vector<Point> linepoints;
-
+			//rect.rotate(0, 10, 0, &origin);
+			//rect.get_points(linepoints);
 			//std::cout << linepoints[0].position()
 			l1.get_points(linepoints);
 			std::cout << "1: ("<<std::get<0>(linepoints[0].position()) << "," << std::get<1>(linepoints[0].position()) << "," << std::get<2>(linepoints[0].position()) << ")" << std::endl;
@@ -95,5 +97,5 @@ void Game::mainloop(){
 		}
             //redrawScreen();
 	}
-*/
+
 }
