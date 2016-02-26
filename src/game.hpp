@@ -3,7 +3,8 @@
 #include "pixel.hpp"
 #include "vector.hpp"
 #include "canvas.hpp"
-
+#include "line.hpp"
+#include "rectangle.hpp"
 
 class Game{
 public:

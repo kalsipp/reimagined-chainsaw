@@ -4,7 +4,6 @@
 #include <sys/ioctl.h>
 
 #include "pixel.hpp"
-
 class Canvas{
 
 public:

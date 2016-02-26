@@ -1,34 +1,37 @@
 #pragma once
 #include <tuple>
+#include <math.h>
+#include <initializer_list>
+#include <vector>
+
 #include "vector.hpp"
 #include "pixel.hpp"
 #include "canvas.hpp"
 class Vector;
 class Point{
 public:
-  Point(int x = 0, int y = 0, int z = 0);
-  Point(std::tuple<int, int, int>);
-  ~Point();
-  
+  Point(float x = 0, float y = 0, float z = 0);
+  Point(std::tuple<float, float, float>);
+  Point(std::initializer_list<float> l);
   void paint(Canvas & canvas);
   
-  std::tuple<int, int, int> & position();
+  std::tuple<float, float, float> & position();
   
-  void set_position(int x = 0, int y = 0, int z = 0);
+  void set_position(float x = 0, float y = 0, float z = 0);
   void set_position(Point & other);
   void set_pixel(Pixel & pixel);
   
   void subtract(Point & other);
   void subtract(Vector & other);
-  
+  Point sub(Point & other);
   void add(Point & other);
   void add(Vector & other);
   
   Vector operator-(Point & other);
   Point operator+(Point & other);
-  
+  Point operator*(double other);
 
 private:
   Pixel m_pixel;
-  std::tuple<int, int, int>  m_position;
+  std::tuple<float, float, float>  m_position;
 };

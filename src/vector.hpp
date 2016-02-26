@@ -5,12 +5,13 @@
 class Point;
 class Vector{
 public:
-  Vector(int x = 0, int y = 0, int z = 0);
-  Vector(std::tuple<int, int, int>);
+  Vector(float x = 0, float y = 0, float z = 0);
+  Vector(std::tuple<float, float, float>);
   ~Vector();
-  std::tuple<int, int, int> & position();
-  void set_position(int x = 0, int y = 0, int z = 0);
+  std::tuple<float, float, float> & position();
+  void set_position(float x = 0, float y = 0, float z = 0);
   int magnitude();
+  void scale(float x = 1, float y = 1, float z = 1);
   void subtract(Vector & other);
   void subtract(Point & other);
   void add(Vector & other);
@@ -19,8 +20,9 @@ public:
   void rotateYZ(float degrees);
   Vector operator-(Vector & other);
   Vector operator+(Vector & other);
+  Vector operator*(double num);
   
 private:
-  std::tuple<int, int, int>  m_position;
+  std::tuple<float, float, float>  m_position;
 
 };
