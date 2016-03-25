@@ -1,4 +1,7 @@
+
+
 #include "line.hpp"
+
 
 Line::Line() {
 
@@ -18,12 +21,73 @@ Line::Line(Point & start, Point & end){
 	m_end = end;
 }
 
+void Line::set_pixel(Pixel & ref){
+	m_pixel_ref = ref;
+}
+
+Vector Line::get_vector(){
+	Vector v = m_end-m_start;
+	return v;
+}
+
+Point & Line::get_start_point(){
+	return m_start;
+}
+Point Line::get_middle(){
+	Vector diff = (m_end-m_start)*0.5f;
+	Point origin = m_start;
+	origin.add(diff);
+	return origin;
+
+}
+Point & Line::get_end_point(){
+	return m_end;
+}
+
+void Line::get_points_rel(std::vector<Point> & container,Point & rotation, Point & position){
+	Line temp(m_start, m_end);
+	temp.rotate(rotation, &position);
+	temp.get_points(container);
+}
+
+void Line::scale(Point p){
+	scale(std::get<0>(p.position()), std::get<1>(p.position()), std::get<2>(p.position()));
+}
+void Line::scale(float a, float b, float c){
+	std::cout << "start " << m_start << std::endl;
+	std::cout << "end " << m_end << std::endl;
+
+	Vector diff = (m_end-m_start)*0.5f;
+	Point origin = m_start;
+	origin.add(diff);
+	std::cout << "origin " << origin << std::endl;
+	std::cout << "diff " << diff << std::endl;
+
+	Vector mult(a, b, c);
+	std::cout << "mult " << mult << std::endl;
+
+	diff = diff*mult;
+	std::cout << "diff " << diff << std::endl;
+
+	m_start.subtract(diff);
+	m_end.add(diff);
+	std::cout << "start after " << m_start << std::endl;
+	std::cout << "end after " << m_end << "\n"<< std::endl;
+
+
+}
+void Line::rotate(Point & rotation, Point * origin){
+	rotate(std::get<0>(rotation.position()),
+		std::get<1>(rotation.position()), 
+		std::get<2>(rotation.position()), origin);
+}
+
 void Line::rotate(float xy, float xz, float yz, Point * origp){
 	Point origin;
 	if(origp == nullptr){
 		origin = (m_start);
 		Vector origvec = (m_end-m_start)*0.5f;
-		origin.add(origvec);
+		origin.subtract(origvec);
 	}else{
 		origin = *origp;
 	}
@@ -37,6 +101,7 @@ void Line::rotate(float xy, float xz, float yz, Point * origp){
 	tempVector.rotateXZ(xz);
 	tempVector.rotateYZ(yz);
 	m_start.add(tempVector);
+	
 	tempVector = m_end-(origin);
                 //reset the point so that the scaled vector can be added
 	m_end.set_position(origin);
@@ -80,8 +145,9 @@ void Line::get_points(std::vector<Point> & container){
 		err_2 = dz2 - l;
 		for (i = 0; i < l; i++) {
 			//std::cout << "this" << std::endl;
-
-			container.push_back(Point(point[0], point[1], point[2]));
+			Point p (point[0], point[1], point[2]);
+			p.set_pixel(m_pixel_ref);
+			container.push_back(p);
 			//output->getTileAt(point[0], point[1], point[2])->setSymbol(symbol);
 			if (err_1 > 0) {
 				point[1] += y_inc;
@@ -99,8 +165,9 @@ void Line::get_points(std::vector<Point> & container){
 		err_1 = dx2 - m;
 		err_2 = dz2 - m;
 		for (i = 0; i < m; i++) {
-			container.push_back(Point(point[0], point[1], point[2]));
-
+			Point p (point[0], point[1], point[2]);
+			p.set_pixel(m_pixel_ref);
+			container.push_back(p);
 			//output->getTileAt(point[0], point[1], point[2])->setSymbol(symbol);
 			if (err_1 > 0) {
 				point[0] += x_inc;
@@ -118,7 +185,9 @@ void Line::get_points(std::vector<Point> & container){
 		err_1 = dy2 - n;
 		err_2 = dx2 - n;
 		for (i = 0; i < n; i++) {
-			container.push_back(Point(point[0], point[1], point[2]));
+			Point p (point[0], point[1], point[2]);
+			p.set_pixel(m_pixel_ref);
+			container.push_back(p);
 
 			//output->getTileAt(point[0], point[1], point[2])->setSymbol(symbol);
 			if (err_1 > 0) {
@@ -134,6 +203,18 @@ void Line::get_points(std::vector<Point> & container){
 			point[2] += z_inc;
 		}
 	}
-	container.push_back(Point(point[0], point[1], point[2]));
+	Point p (point[0], point[1], point[2]);
+	p.set_pixel(m_pixel_ref);
+	container.push_back(p);
 	//output->getTileAt(point[0], point[1], point[2])->setSymbol(symbol);
+}
+
+
+
+
+std::ostream & operator<<(std::ostream & stream, Line & p){
+	stream << "from (" << std::get<0>(p.get_start_point().position()) << "," << std::get<1>(p.get_start_point().position()) << "," << std::get<2>(p.get_start_point().position()) << ") ";
+	stream << " to (" << std::get<0>(p.get_end_point().position()) << "," << std::get<1>(p.get_end_point().position()) << "," << std::get<2>(p.get_end_point().position()) << ") ";
+
+	return stream;
 }

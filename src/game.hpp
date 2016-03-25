@@ -5,6 +5,8 @@
 #include "canvas.hpp"
 #include "line.hpp"
 #include "rectangle.hpp"
+#include "block.hpp"
+#include "camera.hpp"
 
 class Game{
 public:
