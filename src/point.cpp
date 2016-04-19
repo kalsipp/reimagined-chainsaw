@@ -1,138 +1,102 @@
 #include "point.hpp"
+Point::Point(){
+	m_position = new Vector(0,0,0);
+	m_pixel = new Pixel(0);
+}
 
-Point::Point(float x, float y, float z){
- m_position = std::make_tuple(x, y, z);
- m_pixel = Pixel(100);
+Point::Point(const Point & other){
+	m_position = new Vector(other.x(), other.y(), other.z());
+	m_pixel = new Pixel(other.get_pixel());
 }
-Point::Point(std::tuple<float, float, float> n){
-  m_position = n;
-  m_pixel = Pixel(100);
+
+Point::Point(float x, float y, float z, const Pixel & pix){
+	m_position = new Vector(x,y,z);
+	m_pixel = new Pixel(pix);
 }
-Point::Point(std::initializer_list<float> l){
-  std::vector<float> v;
-  v.insert(v.end(), l.begin(), l.end()); 
-  m_position = std::make_tuple(v[0], v[1], v[2]);
+Point::Point(const Vector & other, const Pixel & pix){
+	m_position = new Vector(other);
+	m_pixel = new Pixel(pix);
 }
-const std::tuple<float, float, float> & Point::position()const{
-  return m_position;
+
+Point::Point(float x, float y, float z, int val) {
+	m_position = new Vector(x,y,z);
+	m_pixel = new Pixel(val);
+}
+Point::Point(const Vector & other, int val){
+	m_position = new Vector(other);
+	m_pixel = new Pixel(val);
+}
+
+Point::~Point(){
+	if(m_position != nullptr){
+		delete m_position;
+		m_position = nullptr;
+	}
+	if(m_pixel != nullptr){
+		delete m_pixel;
+		m_pixel = nullptr;
+	}
+}
+
+Point & Point::operator=(const Point & other){
+	m_position->set(other.x(), other.y(), other.z());
+	m_pixel->set(other.get_pixel());
+	return *this;
 }
 
 float & Point::x(){
-  return  std::get<0>(m_position);
+	return m_position->x();
 }
-
 float & Point::y(){
-  return  std::get<1>(m_position);
+	return m_position->y();
 }
 float & Point::z(){
-  return  std::get<2>(m_position);
+	return m_position->z();
 }
-std::tuple<float, float, float> & Point::position(){
-  return m_position;
+float & Point::x()const{
+	return m_position->x();
 }
-void Point::paint(Canvas & canvas){
-  int x = round(std::get<0>(m_position));
-  int y = round(std::get<1>(m_position));
-  canvas.add_pixel(m_pixel, x, y);
+float & Point::y()const{
+	return m_position->y();
 }
-
+float & Point::z()const{
+	return m_position->z();
+}
+Pixel & Point::get_pixel(){
+	return *m_pixel;
+}
+Pixel & Point::get_pixel()const{
+	return *m_pixel;
+}
+Vector & Point::get_position(){
+	return *m_position;
+}
+Vector & Point::get_position()const{
+	return *m_position;
+}
+void Point::move(float x, float y, float z){
+	m_position->add(x,y,z);
+}
+void Point::move(const Vector & other){
+	m_position->add( other);
+}
 void Point::set_position(float x, float y, float z){
-  m_position = std::make_tuple(x, y, z);
+	m_position->set(x,y,z);
 }
-void Point::set_position(Point & other){
-  m_position = other.position();
+void Point::set_position(const Vector & other){
+	m_position->set(other);
 }
-
-void Point::set_position(std::tuple<float, float, float> other){
-  std::get<0>(m_position) -= std::get<0>(other);
-  std::get<1>(m_position) -= std::get<1>(other);
-  std::get<2>(m_position) -= std::get<2>(other);
-
+void Point::set_pixel(const Pixel & pix){
+	m_pixel->set(pix);
 }
-
-void Point::set_pixel(Pixel & pixel){
-  m_pixel = pixel;
-}
-
-Point Point::operator*(Point other){
-  Point p(m_position);
-  std::get<0>(p.position()) *= std::get<0>(other.position());
-  std::get<1>(p.position()) *= std::get<1>(other.position());
-  std::get<2>(p.position()) *= std::get<2>(other.position());
-  return p;
-}
-
-Point Point::operator*(double num){
- std::tuple<float, float, float> t = std::make_tuple(std::get<0>(m_position)*num,
-  std::get<1>(m_position)*num, 
-  std::get<2>(m_position)*num);
- Point p(t);
- return p;
-}
-
-Point Point::operator-(){
-  std::tuple<float, float, float> t(m_position);
-  std::get<0>(t) = -std::get<0>(m_position);
-  std::get<1>(t) = -std::get<1>(m_position);
-  std::get<2>(t) = -std::get<2>(m_position);
-  Point p(t);
-  return p;
-
-}
-
-Vector Point::operator-(Point other){
-  std::tuple<float, float, float> t(m_position);
-  Vector p(t);
-  p.subtract(other);
-  return p;
-  //p.subtract(other);
-}
-
-Point Point::operator+(Point other){
-  std::tuple<float, float, float> t(m_position);
-  Point p(t);
-  p.add(other);
-  return p;
-  //return
-}
-
-bool Point::operator < ( const Point& str) const
-{
-  return (std::get<2>(m_position) < std::get<2>(str.position()));
-}
-void Point::subtract(Point & other){
-  std::get<0>(m_position) -= std::get<0>(other.position());
-  std::get<1>(m_position) -= std::get<1>(other.position());
-  std::get<2>(m_position) -= std::get<2>(other.position());
-}
-void Point::subtract(Vector & other){
-  std::get<0>(m_position) -= std::get<0>(other.position());
-  std::get<1>(m_position) -= std::get<1>(other.position());
-  std::get<2>(m_position) -= std::get<2>(other.position());
-
+void Point::set_pixel(int val){
+	m_pixel->set(val);
 }
 
 
-Point Point::sub(Point & other){
-  Point p(m_position);
-  p.subtract(other);
-  return p;
-}
-
-void Point::add(Point & other){
-  std::get<0>(m_position) += std::get<0>(other.position());
-  std::get<1>(m_position) += std::get<1>(other.position());
-  std::get<2>(m_position) += std::get<2>(other.position());
-}
-
-void Point::add(Vector & other){
-  std::get<0>(m_position) += std::get<0>(other.position());
-  std::get<1>(m_position) += std::get<1>(other.position());
-  std::get<2>(m_position) += std::get<2>(other.position());
-}
-
-
-std::ostream & operator<<(std::ostream & stream, Point & p){
-  stream << "(" << std::get<0>(p.position()) << "," << std::get<1>(p.position()) << "," << std::get<2>(p.position()) << ")";
-  return stream;
+void Point::paint(Canvas & canvas){
+	int i = round(x());
+	int j = round(y());
+	//std::cout << "Painting at (" << i << ","<< j << ")." << std::endl;
+	canvas.add_pixel(*m_pixel, i, j);
 }

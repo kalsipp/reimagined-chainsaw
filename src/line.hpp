@@ -1,33 +1,44 @@
 #pragma once
-#define SCALING_FACTOR 0.5f
-
-
 #include <vector>
-#include "point.hpp"
-#include "vector.hpp"
-#include "pixel.hpp"
-class Line{
 
+#include "vector.hpp"
+#include "point.hpp"
+#include "pixel.hpp"
+
+/*
+Class defining a line. Contains two points with arbritary names. Generates line from these.
+*/
+
+class Line{
 public:
 	Line();
-	Line(int startx, int endx, int starty, int endy, int startz, int endz);
-	Line(Point & start, Point & end);
-	void get_points(std::vector<Point> & container);
-	Vector get_vector();
-	Point & get_start_point();
-	Point & get_end_point();
-	Point get_middle();
-	void rotate(float = 0, float = 0, float = 0, Point* = nullptr);
+	Line(const Vector & start, const Vector & end);
+	Line(const Vector & start, const Vector & end, const Pixel &);
+	Line(const Line &);
+	~Line();
+	Line & operator= (const Line & other);
+
+	void get_points(std::vector<Point> & container)const;
+	//void get_points_rel(std::vector<Vector> & container, const Vector &, const Vector &);
+	Vector get_vector()const; //return endpoint-startpoint
+	Vector & get_start_point(); 
+	Vector & get_end_point();
+	Vector & get_start_point()const; 
+	Vector & get_end_point()const;
+	Vector get_middle()const;
+	void move(const Vector &);
+	void rotate_around(const Vector &, const Vector &);
+	void rotate_around(float, float, float, const Vector &);
+	void rotate(float, float, float);
+	void rotate(const Vector &);
+	float magnitude()const;
 	void scale(float, float, float);
-	void scale(Point);
-	void set_pixel(Pixel &);
-	void rotate(Point & rot, Point * = nullptr);
-	void get_points_rel(std::vector<Point> & container,Point &, Point &);
-	friend std::ostream & operator<<(std::ostream & stream, Line & p);
+	void scale(const Vector &);
+	void set_pixel(const Pixel &);
+	Pixel & get_pixel()const;
 private:
-	Point m_start;
-	Point m_end;
-	Pixel m_pixel_ref = Pixel(11);
-	int m_start_x, m_start_y, m_start_z;
-	int m_end_x, m_end_y, m_end_z;
+	Vector * m_start = nullptr;
+	Vector * m_end = nullptr;
+	Pixel * m_pixel_ref = nullptr;
+
 };

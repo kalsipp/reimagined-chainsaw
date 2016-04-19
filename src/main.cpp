@@ -3,7 +3,8 @@
 
 int main(){
   Game * g = new Game();
-  g->mainloop();
+  //g->autoloop();
+  g->keyloop();
   delete g;
 }
 

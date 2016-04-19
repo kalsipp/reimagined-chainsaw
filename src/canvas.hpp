@@ -1,14 +1,17 @@
 #pragma once
-
 #include <map>
 #include <sys/ioctl.h>
 
 #include "pixel.hpp"
-class Canvas{
 
+/*
+Class for handling 2D output to terminal. Tranformation from 3d to 2d is done in camera.
+*/
+
+class Canvas{
 public:
 	Canvas();
-	void add_pixel(Pixel& pixel, int x, int y);
+	void add_pixel(const Pixel& pixel, int x, int y);
 	void paint();
 	void clear_grid();
 	void clear_screen();
@@ -21,5 +24,4 @@ private:
 	int m_px = 0;
 	int m_py = 0;
 	std::map<std::pair<int,int>, Pixel> m_grid;
-
 };

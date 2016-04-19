@@ -1,136 +1,162 @@
 #include "vector.hpp"
-#include <cassert>
 
-Vector::Vector(float x, float y, float z){
- m_position = std::make_tuple(x, y, z);
+
+Vector::Vector(){
+	m_position = new std::tuple<float, float, float>(0,0,0);
+
 }
-Vector::Vector(std::tuple<float, float, float> n){
-  m_position = n;
+Vector::Vector(float x, float y , float z){
+	m_position = new std::tuple<float, float, float>(x,y,z);
+
 }
+Vector::Vector(const Vector & other){
+	m_position = new std::tuple<float, float, float>(other.x(),other.y(),other.z());
+}
+
 Vector::~Vector(){
+	if(m_position != nullptr){
+		delete m_position;
+		m_position = nullptr;
+	}
 }
-std::tuple<float, float, float> & Vector::position(){
-  return m_position;
-}
-float & Vector::x(){
-  return  std::get<0>(m_position);
+Vector & Vector::operator=(const Vector & other){
+	x() = other.x();
+	y() = other.y();
+	z() = other.z();
+	return *this;
 }
 
+float & Vector::x(){
+	return std::get<0>(*m_position);
+}
 float & Vector::y(){
-  return  std::get<1>(m_position);
+	return std::get<1>(*m_position);
+
 }
 float & Vector::z(){
-  return  std::get<2>(m_position);
+	return std::get<2>(*m_position);
 }
-Vector Vector::operator-(Vector & other){
-  std::tuple<float, float, float> t(m_position);
-  Vector p(t);
-  p.subtract(other);
-  return p;
+float & Vector::x()const{
+	return std::get<0>(*m_position);
 }
-Vector Vector::operator+(Vector & other){
-  std::tuple<float, float, float> t(m_position);
-  Vector p(t);
-  p.add(other);
-  return p;
-}
-
-
-Vector Vector::operator*(double num){
- std::tuple<float, float, float> t = std::make_tuple(std::get<0>(m_position)*num,
-  std::get<1>(m_position)*num, 
-  std::get<2>(m_position)*num);
- Vector p(t);
- return p;
-}
-
-Vector Vector::cross(Vector other){
-  float i = y()*other.z() - z()*other.y();
-  float j = z()*other.x() - x()*other.z();
-  float k = x()*other.y() - y()*other.x();
-  Vector v (i,j,k);
-  return v;
-}
-void Vector::normalize(){
-  float k = x()*x() + y()*y() + z()*z();
-  if(k != 0){
-    std::get<0>(m_position) = std::get<0>(m_position)/k;
-    std::get<1>(m_position) = std::get<1>(m_position) /k;
-    std::get<2>(m_position) = std::get<2>(m_position) /k;
-  }
+float & Vector::y()const{
+	return std::get<1>(*m_position);
 
 }
-
-Vector Vector::operator*(Vector other){
-  std::tuple<float, float, float> t(m_position);
-  std::get<0>(t) *= std::get<0>(other.position());
-  std::get<1>(t) *= std::get<1>(other.position());
-  std::get<2>(t) *= std::get<2>(other.position());
-  Vector p(t);
-  return p;
+float & Vector::z()const{
+	return std::get<2>(*m_position);
+}
+void Vector::subtract(const Vector & other){
+	x() -= other.x();
+	y() -= other.y();
+	z() -= other.z();
+}
+void Vector::add(const Vector & other){
+	x() += other.x();
+	y() += other.y();
+	z() += other.z();
+}
+void Vector::add(float i, float j, float k){
+	x() += i;
+	y() += j;
+	z() += k;
 }
 
-
-void Vector::subtract(Vector & other){
-  std::get<0>(m_position) -= std::get<0>(other.position());
-  std::get<1>(m_position) -= std::get<1>(other.position());
-  std::get<2>(m_position) -= std::get<2>(other.position());
+void Vector::mult(float val){
+	x() *= val;
+	y() *= val;
+	z() *= val;
 }
 
-void Vector::subtract(Point & other){
-  std::get<0>(m_position) -= std::get<0>(other.position());
-  std::get<1>(m_position) -= std::get<1>(other.position());
-  std::get<2>(m_position) -= std::get<2>(other.position());
+void Vector::mult(const Vector & other){
+	x() *= other.x();
+	y() *= other.y();
+	z() *= other.z();
 }
 
-void Vector::add(Vector & other){
-  std::get<0>(m_position) += std::get<0>(other.position());
-  std::get<1>(m_position) += std::get<1>(other.position());
-  std::get<2>(m_position) += std::get<2>(other.position());
+float Vector::dot(const Vector & other){
+	float val = 0;
+	val += 	x() * other.x();
+	val += 	y() * other.y();
+	val += 	z() * other.z();
+	return val;
+}
+void Vector::set(const Vector & other){
+	m_position = new std::tuple<float, float, float>(other.x(),other.y(),other.z());
+}
+void Vector::set(float x, float y, float z){
+	m_position = new std::tuple<float, float, float>(x,y,z);
 }
 
-
-void Vector::set_position(float x, float y, float z){
-  m_position = std::make_tuple(x, y, z);
+void Vector::rotate(float x, float y, float z){
+	rotateYZ(x);
+	rotateXZ(y);
+	rotateXY(z);
 }
-float Vector::magnitude(){
-  float el1 = std::get<0>(m_position)*std::get<0>(m_position);
-  float el2 = std::get<1>(m_position)*std::get<1>(m_position);
-  float el3 = std::get<2>(m_position)*std::get<2>(m_position);
-  return fabs(el1)+fabs(el2)+fabs(el3);
+void Vector::rotate(const Vector & rot){
+	rotate(rot.x(), rot.y(), rot.z());
 }
-
-void Vector::scale(float x, float y, float z){
-  std::get<0>(m_position) *= x;
-  std::get<1>(m_position) *= y;
-  std::get<2>(m_position) *= z;
+void Vector::rotate_around(float yz, float xz, float xy, const Vector & origin){
+	Vector tempVector(*this);
+	tempVector.subtract(origin);
+	//m_start->set(origin);
+	x() = origin.x();
+	y() = origin.y();
+	z() = origin.z();
+	tempVector.rotateXY(xy);
+	tempVector.rotateXZ(xz);
+	tempVector.rotateYZ(yz);
+	//m_start->add(tempVector);
+	x() += tempVector.x();
+	y() += tempVector.y();
+	z() += tempVector.z();
 }
-
-
+void Vector::rotate_around(const Vector & rot, const Vector & origin){
+	rotate_around(rot.x(), rot.y(), rot.z(), origin);
+}
 void Vector::rotateXY(float degrees){
-  float radians = M_PI*degrees/180;
-  float old_x = std::get<0>(m_position);
-  float old_y = std::get<1>(m_position);
-  std::get<0>(m_position) = (old_x*cos(radians)) - (old_y*sin(radians));
-  std::get<1>(m_position) = (old_x*sin(radians)) + (old_y*cos(radians));
-}
+	float radians = degrees*to_rad;
+	float old_x = x();
+	float old_y = y();
+	x() = (old_x*cos(radians)) - (old_y*sin(radians));
+	y() = (old_x*sin(radians)) + (old_y*cos(radians));
 
+}
 void Vector::rotateXZ(float degrees){
-  float radians = M_PI*degrees/180;
-  float old_x = std::get<0>(m_position);
-  float old_z = std::get<2>(m_position);
-  std::get<0>(m_position) = (old_x*cos(radians)) + (old_z*sin(radians));
-  std::get<2>(m_position) = -(old_x*sin(radians)) + (old_z*cos(radians));
+	float radians = degrees*to_rad;
+	float old_x = x();
+	float old_z = z();
+
+	x() = (old_x*cos(radians)) + (old_z*sin(radians));
+	z() = -(old_x*sin(radians)) + (old_z*cos(radians));
+
 }
 void Vector::rotateYZ(float degrees){
-  float radians = M_PI*degrees/180;
-  float old_y = std::get<1>(m_position);
-  float old_z = std::get<2>(m_position);
-  std::get<1>(m_position) = (old_y*cos(radians)) + (old_z*sin(radians));
-  std::get<2>(m_position) = -(old_y*sin(radians)) + (old_z*cos(radians));
+	float radians = degrees*to_rad;
+	float old_y = y();
+	float old_z = z();
+
+	y() = (old_y*cos(radians)) + (old_z*sin(radians));
+	z() = -(old_y*sin(radians)) + (old_z*cos(radians));
+
+}
+void Vector::cross(const Vector & other){
+	x() = y()*other.z() - z()*other.y();
+	y() = z()*other.x() - x()*other.z();
+	z() = x()*other.y() - y()*other.x();
 }
 
-std::ostream & operator<<(std::ostream & stream, Vector & p){
-  stream << "(" << std::get<0>(p.position()) << "," << std::get<1>(p.position()) << "," << std::get<2>(p.position()) << ")";
-  return stream;
+float Vector::magnitude(){
+	return sqrt(x()*x() + y()*y() + z()*z());
 }
+void Vector::normalize(){
+	float mag = magnitude();
+	x() /= mag;
+	y() /= mag;
+	z() /= mag;
+}
+
+std::ostream & operator<<(std::ostream & stream, const Vector & p){
+	stream << "(" << p.x() << "," << p.y() << "," << p.z() << ")";
+	return stream;
+}	

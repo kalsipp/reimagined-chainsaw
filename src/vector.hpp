@@ -1,35 +1,49 @@
 #pragma once
+
 #include <tuple>
 #include <math.h>
-#include "point.hpp"
-class Point;
-class Vector{
-public:
-  Vector(float x = 0, float y = 0, float z = 0);
-  Vector(std::tuple<float, float, float>);
-  ~Vector();
-  std::tuple<float, float, float> & position();
-  void set_position(float x = 0, float y = 0, float z = 0);
-  float magnitude();
-  float & x();
-  float & y();
-  float & z();
-  void scale(float x = 1, float y = 1, float z = 1);
-  void subtract(Vector & other);
-  void subtract(Point & other);
-  void add(Vector & other);
-  void rotateXY(float degrees);
-  void rotateXZ(float degrees);
-  void rotateYZ(float degrees);
-  Vector cross(Vector other);
-  void normalize();
-  Vector operator-(Vector & other);
-  Vector operator+(Vector & other);
-  Vector operator*(double num);
-  Vector operator*(Vector other);
-  friend std::ostream & operator<<(std::ostream & stream, Vector & p);
-  
-private:
-  std::tuple<float, float, float>  m_position;
+#include <vector>
+#include <iostream>
 
+/*
+   General class to hold a 3 coordinate position and to perform different transformations
+*/
+
+class Vector{
+public: 
+	Vector();
+	Vector(float, float, float);
+	Vector(const Vector &);
+	~Vector();
+	Vector & operator=(const Vector &);
+	float & x();
+	float & y();
+	float & z();
+	float & x()const;
+	float & y()const;
+	float & z()const;
+	void subtract(const Vector &);
+	void add(const Vector &);
+	void add(float, float, float);
+	void mult(float);
+	void mult(const Vector &);
+	float dot(const Vector &);
+	void set(const Vector &);
+	void set(float, float, float);
+	void rotate(float, float, float);
+	void rotate(const Vector &);
+	void rotate_around(float, float, float, const Vector &);
+	void rotate_around(const Vector &, const Vector &);
+	void rotateXY(float degrees);
+	void rotateXZ(float degrees);
+	void rotateYZ(float degrees);
+	void cross(const Vector & other);
+	float magnitude();
+	void normalize();
+
+	friend std::ostream & operator<<(std::ostream & stream, const Vector & p);
+
+private:
+	std::tuple<float, float, float> * m_position = nullptr;
+	float to_rad = M_PI/180;
 };

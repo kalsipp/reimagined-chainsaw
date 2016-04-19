@@ -1,13 +1,18 @@
 #pragma once
 #include <string>
 #include <iostream>
-struct Pixel{
-  std::string m_string;
-  int m_value;
-  Pixel();
-  Pixel(int c);
-  Pixel(std::string s);
-  std::string get_str() const;
-  int get_val() const;
+class Pixel{
+public:
+	Pixel();
+	Pixel(int c);
+	Pixel(std::string s);
+	Pixel & operator=(const Pixel &);
+	void set(int);
+	void set(const Pixel & pix);
+	std::string get_str() const;
+	int get_val() const;
+private:
+	int m_value;
+	std::string m_string;
 };
 
