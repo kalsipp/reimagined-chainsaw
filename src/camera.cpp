@@ -137,16 +137,18 @@ Vector Camera::right(){
 }
 bool Camera::is_in_front(const Vector & k){
 	
+	return k.z() > m_position->z();
+
 	Vector p = k;
 	Vector v = forward();
 	Vector rel = Vector(0,0,2*m_fx);
 	rel.mult(forward());
 	p.subtract(*m_position);
 	p.add(rel);
-	std::cout << "forward " << v << "\n";
-	std::cout << "point " << p << "\n";
+	//std::cout << "forward " << v << "\n";
+	//std::cout << "point " << p << "\n";
 	float val = p.x()*v.x() + p.y()*v.y() + p.z()*v.z();
-	std::cout << "Result " << val << std::endl;
+	//std::cout << "Result " << val << std::endl;
 	return val > 0;
 	//return p.z() > m_position->z();
 	

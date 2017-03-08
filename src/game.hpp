@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <random>
 #include <ncurses.h>
 #include "vector.hpp"
 #include "point.hpp"
